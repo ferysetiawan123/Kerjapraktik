@@ -15,19 +15,16 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        // Opsi: Hapus semua user yang ada sebelum seeding.
-        // HANYA JIKA ANDA YAKIN! Jika tidak, komentar baris di bawah.
-        // User::truncate();
+
 
         // Akun Administrator
         User::updateOrCreate(
-            ['email' => 'admin@gmail.com'], // Kondisi untuk mencari user
+            ['email' => 'admin@gmail.com'], 
             [
                 'name' => 'Administrator',
-                'password' => Hash::make('123'), // Gunakan Hash::make() untuk password
-                'foto' => '/img/user.jpg', // Jika ini kolom 'foto' di tabel 'users'
-                'role' => 'administrator', // Ganti 'level' menjadi 'role'
-                'email_verified_at' => now(), // Opsional: Tambahkan ini jika menggunakan email verification
+                'password' => Hash::make('123'),  
+                'role' => 'administrator', 
+                'email_verified_at' => now(), 
             ]
         );
 
@@ -37,7 +34,6 @@ class UserTableSeeder extends Seeder
             [
                 'name' => 'Manajer',
                 'password' => Hash::make('123'),
-                'foto' => '/img/user.jpg',
                 'role' => 'manager', // Role Manajer
                 'email_verified_at' => now(),
             ]
@@ -49,22 +45,20 @@ class UserTableSeeder extends Seeder
             [
                 'name' => 'Kasir 1',
                 'password' => Hash::make('123'),
-                'foto' => '/img/user.jpg',
+                'role' => 'kasir', // Role Kasir
+                'email_verified_at' => now(),
+            ]
+        );
+        User::updateOrCreate(
+            ['email' => 'kasir2@gmail.com'],
+            [
+                'name' => 'Kasir 2',
+                'password' => Hash::make('123'),
                 'role' => 'kasir', // Role Kasir
                 'email_verified_at' => now(),
             ]
         );
 
-        // Tambahkan akun kasir lain jika diperlukan
-        // User::updateOrCreate(
-        //     ['email' => 'kasir2@gmail.com'],
-        //     [
-        //         'name' => 'Kasir 2',
-        //         'password' => Hash::make('123'),
-        //         'foto' => '/img/user.jpg',
-        //         'role' => 'kasir',
-        //         'email_verified_at' => now(),
-        //     ]
-        // );
+        
     }
 }

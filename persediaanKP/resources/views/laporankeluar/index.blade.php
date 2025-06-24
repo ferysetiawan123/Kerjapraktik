@@ -1,0 +1,133 @@
+@extends('layouts.master')
+
+@section('title')
+    Laporan Inventory Keluar
+@endsection
+
+@push('css')
+<link rel="stylesheet" href="{{ asset('/AdminLTE-2/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
+{{-- PERBAIKAN: Tambahkan link CSS untuk Select2 --}}
+<link rel="stylesheet" href="{{ asset('/AdminLTE-2/bower_components/select2/dist/css/select2.min.css') }}">
+@endpush
+
+@section('breadcrumb')
+    @parent
+    <li class="active">Laporan</li>
+@endsection
+
+@section('content')
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <button onclick="updatePeriode()" class="btn btn-info btn-sm btn-flat"><i class="fa fa-plus-circle"></i> Ubah Periode</button> {{-- PERBAIKAN: btn-xsbtn-flat jadi btn-sm btn-flat --}}
+                <a href="{{ route('laporankeluar.export_pdf', ['awal' => $tanggalAwal, 'akhir' => $tanggalAkhir, 'id_produk' => $idProduk]) }}" class="btn btn-danger btn-sm btn-flat" target="_blank"><i class="fa fa-file-pdf-o"></i> Export PDF</a>
+            </div>
+            <div class="box-header with-border">
+                <b>Dari Tanggal   :   {{ tanggal_indonesia($tanggalAwal, false) }}</b> 
+            </div>
+            <div class="box-header with-border">
+                <b>Sampai Tanggal   :   {{ tanggal_indonesia($tanggalAkhir, false) }}</b>
+            </div>
+            <div class="box-body table-responsive">
+                {{-- PERBAIKAN: Berikan ID unik pada tabel agar DataTables lebih spesifik --}}
+                <table class="table table-stiped table-bordered" id="laporan-barang-keluar-table"> 
+                    <thead>
+                        <th width="5%">No</th>
+                        <th>Nama Barang</th>
+                        <th>Tanggal Keluar</th>
+                        <th>Jumlah Keluar</th>
+                        <th>Keterangan Barang</th>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@includeIf('laporankeluar.form') {{-- Modal filter --}}
+@endsection
+
+@push('scripts')
+<script src="{{ asset('/AdminLTE-2/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+{{-- PERBAIKAN: Tambahkan script JS untuk Select2 --}}
+<script src="{{ asset('/AdminLTE-2/bower_components/select2/dist/js/select2.full.min.js') }}"></script>
+
+<script>
+    let table;
+
+    $(function () {
+        table = $('#laporan-barang-keluar-table').DataTable({ // PERBAIKAN: Gunakan ID tabel
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            autoWidth: false,
+            ajax: {
+                // PERBAIKAN: Tambahkan id_produk ke URL AJAX DataTables
+                url: '{{ route('laporankeluar.data', ['awal' => $tanggalAwal, 'akhir' => $tanggalAkhir, 'id_produk' => $idProduk]) }}',
+                // PERBAIKAN: Tambahkan error handling
+                error: function (xhr, error, thrown) {
+                    console.log("DataTables Ajax Error:", thrown);
+                    console.log("Response Text:", xhr.responseText);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        html: 'Terjadi kesalahan saat memuat data laporan.<br>Detail: ' + (xhr.responseJSON ? xhr.responseJSON.message : thrown) + '<br>Silakan periksa konsol browser untuk detail lebih lanjut.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            columns: [
+                {data: 'DT_RowIndex', searchable: false, sortable: false},
+                {data: 'nama_produk'},
+                {data: 'tanggal_keluar'}, // PERBAIKAN: Gunakan 'tanggal_keluar' sesuai key dari Controller
+                {data: 'jumlah_keluar'},  // PERBAIKAN: Gunakan 'jumlah_keluar' sesuai key dari Controller
+                {data: 'keterangan_barang'}, // PERBAIKAN: Gunakan 'keterangan_barang' sesuai key dari Controller
+            ],
+            dom: 'Brt', 
+            bSort: false, 
+            bPaginate: false, 
+        });
+
+        // PERBAIKAN: Event handler saat form modal di-submit
+        $('#modal-form form').submit(function (e) {
+            e.preventDefault(); // Mencegah submit form secara default
+            
+            // Dapatkan nilai dari form modal
+            let tanggalAwalBaru = $('[name=tanggal_awal]').val();
+            let tanggalAkhirBaru = $('[name=tanggal_akhir]').val();
+            let idProdukBaru = $('[name=id_produk]').val(); // Ambil nilai produk yang dipilih
+
+            // Bangun URL AJAX baru dengan parameter filter produk
+            let newUrl = '{{ route('laporankeluar.data', ['awal' => '_awal_', 'akhir' => '_akhir_', 'id_produk' => '_id_produk_']) }}';
+            newUrl = newUrl.replace('_awal_', tanggalAwalBaru);
+            newUrl = newUrl.replace('_akhir_', tanggalAkhirBaru);
+            newUrl = newUrl.replace('_id_produk_', idProdukBaru);
+
+            // Perbarui URL DataTables dan muat ulang data
+            table.ajax.url(newUrl).load();
+
+            // Perbarui link export PDF dengan parameter filter produk
+            let newPdfUrl = '{{ route('laporankeluar.export_pdf', ['awal' => '_awal_', 'akhir' => '_akhir_', 'id_produk' => '_id_produk_']) }}';
+            newPdfUrl = newPdfUrl.replace('_awal_', tanggalAwalBaru);
+            newPdfUrl = newPdfUrl.replace('_akhir_', tanggalAkhirBaru);
+            newPdfUrl = newPdfUrl.replace('_id_produk_', idProdukBaru);
+            $('.btn-danger').attr('href', newPdfUrl); 
+
+            // Perbarui teks tanggal di header (asumsi fungsi tanggal_indonesia ada di backend dan bisa dipanggil via AJAX)
+            $.get(`{{ url('/tanggal_indonesia') }}/${tanggalAwalBaru}/false`, function(data) {
+                $('.box-header:nth-of-type(2) b').html(`Dari Tanggal   :   ${data}`);
+            });
+            $.get(`{{ url('/tanggal_indonesia') }}/${tanggalAkhirBaru}/false`, function(data) {
+                $('.box-header:nth-of-type(3) b').html(`Sampai Tanggal   :   ${data}`);
+            });
+
+            $('#modal-form').modal('hide'); // Tutup modal
+        });
+    });
+
+    function updatePeriode() {
+        $('#modal-form').modal('show');
+    }
+</script>
+@endpush

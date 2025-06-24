@@ -31,7 +31,7 @@
             </div>
             <div class="box-body table-responsive">
                 {{-- Berikan ID unik pada tabel agar DataTables lebih spesifik --}}
-                <table class="table table-stiped table-bordered" id="laporan-barang-masuk-table"> 
+                <table class="table table-stiped table-bordered" id="laporan-barang-masuk-table">
                     <thead>
                         <th width="5%">No</th>
                         <th>Nama Barang</th>
@@ -65,32 +65,36 @@
             ajax: {
                 url: '{{ route('laporan.data', ['awal' => $tanggalAwal, 'akhir' => $tanggalAkhir, 'id_produk' => $idProduk]) }}',
                 error: function (xhr, error, thrown) {
-                    console.log("DataTables Ajax Error:", thrown);
-                    console.log("Response Text:", xhr.responseText);
+                if (xhr.status === 200 && xhr.responseText === '{"data":[]}') {
+                    console.warn('Data kosong, tapi bukan error.');
+                } else if (xhr.status !== 200) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        html: 'Terjadi kesalahan saat memuat data laporan.<br>Detail: ' + (xhr.responseJSON ? xhr.responseJSON.message : thrown) + '<br>Silakan periksa konsol browser untuk detail lebih lanjut.',
+                        html: 'Terjadi kesalahan saat memuat data laporan.<br>Detail: ' +
+                            (xhr.responseJSON ? xhr.responseJSON.message : thrown) +
+                            '<br>Silakan periksa konsol browser untuk detail lebih lanjut.',
                         confirmButtonText: 'OK'
                     });
                 }
+            }
             },
             columns: [
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
                 {data: 'nama_produk'},
-                {data: 'tanggal'}, 
+                {data: 'tanggal'},
                 {data: 'jumlahMasuk'},
                 {data: 'nama_supplier'}, // Perbaiki key menjadi 'nama_supplier'
             ],
-            dom: 'Brt', 
-            bSort: false, 
-            bPaginate: false, 
+            dom: 'Brt',
+            bSort: false,
+            bPaginate: false,
         });
 
         // Event handler saat form modal di-submit
         $('#modal-form form').submit(function (e) {
             e.preventDefault(); // Mencegah submit form secara default
-            
+
             // Dapatkan nilai dari form modal
             let tanggalAwalBaru = $('[name=tanggal_awal]').val();
             let tanggalAkhirBaru = $('[name=tanggal_akhir]').val();

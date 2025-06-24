@@ -12,6 +12,7 @@ use App\Http\Controllers\{
     LaporanKeluarController,
 };
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,31 @@ Route::group(['middleware' => 'auth'], function () {
     // Tambahkan only() untuk secara eksplisit mendefinisikan metode yang digunakan dari resource
     // Ini juga bisa membantu jika Anda tidak ingin semua metode resource terdaftar secara default
     Route::resource('/barangmasuk', BarangMasukController::class)->except(['create', 'edit']);
+
+
+
+    Route::get('/tanggal_indonesia/{tanggal}/{format}', function ($tanggal, $format) {
+        $bulan = [
+            1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+
+        try {
+            $carbon = Carbon::parse($tanggal);
+            $tgl = $carbon->day;
+            $bln = $carbon->month;
+            $thn = $carbon->year;
+
+            $hasil = $format === "true"
+                ? $tgl . ' ' . $bulan[$bln] . ' ' . $thn
+                : $carbon->format('Y-m-d');
+
+            return response($hasil);
+        } catch (\Exception $e) {
+            return response('Tanggal tidak valid', 400);
+        }
+    });
+
 
     Route::get('/barangkeluar/data',[BarangKeluarController::class, 'data'])->name('barangkeluar.data');
     // Tambahkan only() untuk secara eksplisit mendefinisikan metode yang digunakan dari resource

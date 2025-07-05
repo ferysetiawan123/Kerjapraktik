@@ -79,7 +79,6 @@ class ProdukController extends Controller
             'merk' => 'nullable|string|max:255',
             'harga_beli' => 'required|numeric|min:0',
             'harga_jual' => 'required|numeric|min:0|gte:harga_beli',
-            'stok' => 'required|integer|min:0',
             'satuan' => 'required|string|max:50',
         ]);
 
@@ -177,7 +176,6 @@ class ProdukController extends Controller
             'merk' => 'nullable|string|max:255',
             'harga_beli' => 'required|numeric|min:0',
             'harga_jual' => 'required|numeric|min:0|gte:harga_beli',
-            'stok' => 'required|integer|min:0', // Stok tetap divalidasi meskipun readonly, untuk mencegah manipulasi
             'satuan' => 'required|string|max:50',
             // 'kode_produk' tidak divalidasi dari request karena tidak ada di form dan digenerate otomatis
         ]);

@@ -20,9 +20,9 @@ class BarangMasukController extends Controller
      */
     public function index()
     {
-        $produk = Produk::orderBy('nama_produk')->pluck('nama_produk', 'id_produk');
+        $produk = Produk::orderBy('kode_produk')->pluck('kode_produk', 'id_produk');
         $supplier = Supplier::orderBy('nama')->pluck('nama', 'id_supplier');
-        
+
         return view('barangmasuk.index', compact('produk', 'supplier'));
     }
 
@@ -41,7 +41,7 @@ class BarangMasukController extends Controller
                 'barang_masuk.tanggal_masuk',
                 'barang_masuk.jumlah_masuk',
                 'barang_masuk.penerima_barang',
-                'produk.nama_produk',
+                'produk.kode_produk',
                 'supplier.nama'
             )
             ->orderBy('barang_masuk.created_at', 'desc')
@@ -53,7 +53,7 @@ class BarangMasukController extends Controller
             ->addColumn('tanggal_masuk', function ($barang_masuk) {
                 // Pastikan fungsi helper tanggal_indonesia tersedia di project Anda
                 // Jika belum ada, Anda bisa menambahkannya di app/Helpers/helpers.php atau sejenisnya
-                return tanggal_indonesia($barang_masuk->tanggal_masuk, false); 
+                return tanggal_indonesia($barang_masuk->tanggal_masuk, false);
             })
             ->addColumn('aksi', function ($barang_masuk) {
                 // Pastikan id_barang_masuk tidak kosong sebelum membuat tombol aksi
@@ -61,7 +61,7 @@ class BarangMasukController extends Controller
                     Log::warning('ID Barang Masuk kosong untuk satu baris data saat membuat kolom aksi.');
                     return ''; // Mengembalikan string kosong jika ID tidak valid
                 }
-                
+
                 // Hanya tampilkan tombol edit/hapus jika user adalah administrator atau manager
                 if (auth()->check() && (auth()->user()->hasRole('administrator') || auth()->user()->hasRole('manager'))) {
                     return '
@@ -124,7 +124,7 @@ class BarangMasukController extends Controller
                 'jumlah_masuk' => $request->jumlah_masuk,
                 'penerima_barang' => $request->penerima_barang,
             ]);
-            
+
             DB::commit();
 
             return response()->json([
@@ -220,13 +220,13 @@ class BarangMasukController extends Controller
                 $selisihJumlah = $request->jumlah_masuk - $barang_masuk->jumlah_masuk;
                 $produkBaru->stok += $selisihJumlah;
 
-                if ($produkBaru->stok < 0) { 
+                if ($produkBaru->stok < 0) {
                     DB::rollBack();
                     return response()->json(['success' => false, 'message' => 'Update gagal: Stok produk tidak bisa negatif.'], 400);
                 }
                 $produkBaru->save();
             }
-            
+
             // Perbarui data barang masuk dengan nama kolom snake_case
             $barang_masuk->update([
                 'id_produk' => $request->id_produk,

@@ -23,7 +23,7 @@
                 <table class="table table-stiped table-bordered">
                     <thead>
                         <th width="5%">No</th>
-                        <th>Nama Produk</th>
+                        <th>Kode Produk</th>
                         <th>Tanggal Masuk</th>
                         <th>Jumlah Masuk</th>
                         <th>Supplier</th>
@@ -76,7 +76,7 @@
             },
             columns: [
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
-                {data: 'nama_produk'},
+                {data: 'kode_produk'},
                 {data: 'tanggal_masuk'}, // Menggunakan 'tanggal_masuk' sesuai dengan nama kolom di DataTables
                 {data: 'jumlah_masuk'},
                 {data: 'nama'},
@@ -96,7 +96,7 @@
         $('#modal-form').validator().on('submit', function (e) {
             if (!e.isDefaultPrevented()) {
                 e.preventDefault();
-                
+
                 // Pastikan Anda mendapatkan data dari form dengan benar
                 // Misalnya, jika form menggunakan input tanggal dengan name="tanggal_masuk",
                 // maka data yang diserialisasi akan otomatis menyertakannya.
@@ -114,7 +114,7 @@
                     })
                     .fail((jqXHR, textStatus, errorThrown) => {
                         let errorMessage = 'Terjadi kesalahan tidak terduga saat menyimpan data. Silakan coba lagi atau hubungi administrator.';
-                        
+
                         if (jqXHR.status === 422) {
                             let errors = jqXHR.responseJSON.errors;
                             errorMessage = 'Validasi gagal:\n';
@@ -128,7 +128,7 @@
                         } else if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
                             errorMessage = jqXHR.responseJSON.message;
                         }
-                        
+
                         Swal.fire({
                             icon: 'error',
                             title: 'Gagal!',
@@ -154,7 +154,7 @@
         $('#modal-form form')[0].reset(); // Reset semua input form
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('post');
-        
+
         // Reset dan set nilai default untuk field tertentu
         $('#modal-form [name=id_produk]').val('').trigger('change');
         $('#modal-form [name=id_supplier]').val('').trigger('change');
@@ -164,8 +164,8 @@
         $('#modal-form [name=penerima_barang]').val('{{ auth()->user()->name ?? '' }}'); // Auto-fill penerima dengan nama user
 
         // Reset validasi
-        $('.help-block.with-errors').empty(); 
-        $('.form-group').removeClass('has-error'); 
+        $('.help-block.with-errors').empty();
+        $('.form-group').removeClass('has-error');
 
         $('#modal-form [name=id_produk]').focus(); // Fokus ke input id_produk
     }
@@ -178,15 +178,15 @@
         $('#modal-form form')[0].reset();
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('put');
-        $('.help-block.with-errors').empty();  
-        $('.form-group').removeClass('has-error'); 
+        $('.help-block.with-errors').empty();
+        $('.form-group').removeClass('has-error');
 
         $.get(url)
             .done((response) => {
                 // Mengisi form dengan data dari respons server (kolom snake_case)
                 $('#modal-form [name=id_produk]').val(response.id_produk).trigger('change');
                 // PASTIKAN INPUT NAME DI FORM MODAL ADALAH 'tanggal_masuk'
-                $('#modal-form [name=tanggal_masuk]').val(response.tanggal_masuk); 
+                $('#modal-form [name=tanggal_masuk]').val(response.tanggal_masuk);
                 $('#modal-form [name=jumlah_masuk]').val(response.jumlah_masuk);
                 $('#modal-form [name=id_supplier]').val(response.id_supplier).trigger('change');
                 $('#modal-form [name=penerima_barang]').val(response.penerima_barang);

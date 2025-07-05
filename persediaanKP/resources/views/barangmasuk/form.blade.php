@@ -11,11 +11,11 @@
                     <h4 class="modal-title"></h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group row"> 
-                        <label for="id_produk" class="col-lg-2 col-lg-offset-1 control-label">Nama Produk</label>
+                    <div class="form-group row">
+                        <label for="id_produk" class="col-lg-2 col-lg-offset-1 control-label">Kode Produk</label>
                         <div class="col-md-8">
                             <select name="id_produk" id="id_produk" class="form-control select2" required>
-                                <option value="">Pilih Nama Produk</option>
+                                <option value="">Pilih Kode Produk</option>
                                 @foreach ($produk as $key => $item)
                                     <option value="{{ $key }}">{{$item}}</option>
                                 @endforeach
@@ -28,7 +28,7 @@
                         <div class="col-lg-8">
                             {{-- PERUBAHAN UTAMA: name diubah dari "tanggal" menjadi "tanggal_masuk" --}}
                             {{-- PERUBAHAN: type diubah dari "date" menjadi "text" dan ditambahkan class "datepicker" --}}
-                            <input type="text" name="tanggal_masuk" id="tanggal_masuk" class="form-control datepicker" required 
+                            <input type="text" name="tanggal_masuk" id="tanggal_masuk" class="form-control datepicker" required
                                 data-date-format="yyyy-mm-dd" data-date-end-date="0d" value="{{ date('Y-m-d') }}">
                             <span class="help-block with-errors"></span>
                         </div>
@@ -40,7 +40,7 @@
                             <span class="help-block with-errors"></span>
                         </div>
                     </div>
-                    <div class="form-group row"> 
+                    <div class="form-group row">
                         <label for="id_supplier" class="col-lg-2 col-lg-offset-1 control-label">Nama Supplier</label>
                         <div class="col-md-8">
                             <select name="id_supplier" id="id_supplier" class="form-control select2" required>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-save"></i> Simpan</button>
                     <button type="button" class="btn btn-sm btn-flat btn-warning" data-dismiss="modal"><i class="fa fa-arrow-circle-left"></i> Batal</button>
@@ -91,7 +91,7 @@
             autoclose: true,
             todayHighlight: true,
             // opsi ini membatasi tanggal hanya sampai hari ini atau sebelumnya
-            endDate: '0d' 
+            endDate: '0d'
         });
 
         // Event listener saat modal ditunjukkan untuk inisialisasi ulang datepicker dan select2 jika diperlukan

@@ -19,9 +19,9 @@ class BarangKeluarController extends Controller
      */
     public function index()
     {
-        // Mengambil produk dengan id_produk sebagai value dan nama_produk sebagai teks
-        // Pastikan 'id_produk' dan 'nama_produk' adalah kolom yang benar di tabel 'produk'
-        $produk = Produk::orderBy('nama_produk')->pluck('nama_produk', 'id_produk');
+        // Mengambil produk dengan id_produk sebagai value dan kode_produk sebagai teks
+        // Pastikan 'id_produk' dan 'kode_produk' adalah kolom yang benar di tabel 'produk'
+        $produk = Produk::orderBy('kode_produk')->pluck('kode_produk', 'id_produk');
         return view('barangkeluar.index', compact('produk'));
     }
 
@@ -40,7 +40,7 @@ class BarangKeluarController extends Controller
                 'barang_keluar.jumlah_keluar',
                 'barang_keluar.penerima_barang', // Pastikan kolom ini ada di database dan dipilih
                 'barang_keluar.keterangan_barang',
-                'produk.nama_produk'
+                'produk.kode_produk'
             )
             ->orderBy('barang_keluar.created_at', 'desc')
             ->get();

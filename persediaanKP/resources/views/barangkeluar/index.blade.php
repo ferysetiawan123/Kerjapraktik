@@ -73,7 +73,7 @@
             },
             columns: [
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
-                {data: 'nama_produk'},
+                {data: 'kode_produk'},
                 {data: 'tanggal_keluar'}, // <-- PERBAIKAN: Gunakan 'tanggal_keluar'
                 {data: 'jumlah_keluar'},
                 {data: 'penerima_barang'},
@@ -85,7 +85,7 @@
         $('#modal-form').validator().on('submit', function (e) {
             if (!e.isDefaultPrevented()) {
                 e.preventDefault();
-                
+
                 $.post($('#modal-form form').attr('action'), $('#modal-form form').serialize())
                     .done((response) => {
                         $('#modal-form').modal('hide');
@@ -100,7 +100,7 @@
                     })
                     .fail((jqXHR, textStatus, errorThrown) => {
                         let errorMessage = 'Terjadi kesalahan tidak terduga saat menyimpan data. Silakan coba lagi atau hubungi administrator.';
-                        
+
                         if (jqXHR.status === 422) {
                             let errors = jqXHR.responseJSON.errors;
                             errorMessage = 'Validasi gagal:\n';
@@ -113,7 +113,7 @@
                         } else if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
                             errorMessage = jqXHR.responseJSON.message;
                         }
-                        
+
                         Swal.fire({
                             icon: 'error',
                             title: 'Gagal!',
@@ -144,7 +144,7 @@
         $('#modal-form [name=keterangan_barang]').val('');
 
         $('#modal-form [name=id_produk]').focus();
-        $('.help-block.with-errors').empty(); 
+        $('.help-block.with-errors').empty();
         $('.form-group').removeClass('has-error');
     }
 
@@ -155,7 +155,7 @@
         $('#modal-form form')[0].reset();
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('put');
-        $('.help-block.with-errors').empty(); 
+        $('.help-block.with-errors').empty();
         $('.form-group').removeClass('has-error');
 
         $.get(url)

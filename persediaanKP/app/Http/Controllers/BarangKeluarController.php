@@ -21,7 +21,11 @@ class BarangKeluarController extends Controller
     {
         // Mengambil produk dengan id_produk sebagai value dan kode_produk sebagai teks
         // Pastikan 'id_produk' dan 'kode_produk' adalah kolom yang benar di tabel 'produk'
-        $produk = Produk::orderBy('kode_produk')->pluck('kode_produk', 'id_produk');
+        $produk = Produk::orderBy('kode_produk')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->id_produk => $item->kode_produk . ' - ' . $item->nama_produk];
+            });
         return view('barangkeluar.index', compact('produk'));
     }
 

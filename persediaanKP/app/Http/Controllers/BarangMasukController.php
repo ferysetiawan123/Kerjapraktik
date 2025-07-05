@@ -20,7 +20,11 @@ class BarangMasukController extends Controller
      */
     public function index()
     {
-        $produk = Produk::orderBy('kode_produk')->pluck('kode_produk', 'id_produk');
+        $produk = Produk::orderBy('kode_produk')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->id_produk => $item->kode_produk . ' - ' . $item->nama_produk];
+            });
         $supplier = Supplier::orderBy('nama')->pluck('nama', 'id_supplier');
 
         return view('barangmasuk.index', compact('produk', 'supplier'));

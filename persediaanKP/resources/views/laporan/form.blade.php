@@ -69,12 +69,11 @@
         });
 
         // Inisialisasi Select2 untuk dropdown produk
-        // Pastikan Anda sudah memuat library Select2 di layout utama atau di halaman ini
-        if ($.fn.select2) { // Cek apakah Select2 sudah dimuat
+        if ($.fn.select2) { 
             $('#modal-form .select2').select2({
                 placeholder: 'Pilih Produk',
                 allowClear: true,
-                dropdownParent: $('#modal-form') // Penting untuk Select2 di dalam modal
+                dropdownParent: $('#modal-form') /
             });
         }
 

@@ -42,7 +42,7 @@
 
 @push('scripts')
 <script>
-    // Mengatur CSRF token untuk semua permintaan AJAX
+   
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

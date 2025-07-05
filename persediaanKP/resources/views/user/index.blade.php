@@ -63,8 +63,7 @@
                     })
                     .fail(errors => {
                         alert('Tidak dapat menyimpan data');
-                        // Anda bisa menambahkan penanganan error validasi di sini,
-                        // misalnya menampilkan error di form modal
+                        
                         if (errors.status == 422) {
                             let messages = '';
                             $.each(errors.responseJSON.errors, function(key, value){
@@ -87,7 +86,7 @@
         $('#modal-form form').attr('action', '{{ route('user.store') }}');
         $('#modal-form [name=_method]').val('post');
         $('#password, #password_confirmation').attr('required', true);
-        $('.help-block.with-errors').html(''); // Clear previous errors
+        $('.help-block.with-errors').html(''); 
     }
 
     function editForm(url) {
@@ -97,14 +96,14 @@
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('put');
         $('#password, #password_confirmation').attr('required', false);
-        $('.help-block.with-errors').html(''); // Clear previous errors
+        $('.help-block.with-errors').html(''); 
 
 
         $.get(url)
             .done(response => {
                 $('#modal-form [name=name]').val(response.name);
                 $('#modal-form [name=email]').val(response.email);
-                $('#modal-form [name=role]').val(response.role); // Set the role dropdown
+                $('#modal-form [name=role]').val(response.role); 
             })
             .fail(errors => {
                 alert('Tidak dapat menampilkan data');
@@ -123,8 +122,8 @@
                 })
                 .fail((errors) => {
                     alert('Tidak dapat menghapus data');
-                    // Anda bisa menambahkan penanganan error di sini, misalnya menampilkan error
-                    if (errors.status == 403) { // Jika server mengembalikan 403 Forbidden
+                  
+                    if (errors.status == 403) { 
                         alert(errors.responseJSON);
                     } else {
                         alert('Terjadi kesalahan saat menghapus data.');

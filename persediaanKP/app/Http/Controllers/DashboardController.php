@@ -7,7 +7,7 @@ use App\Models\Produk;
 use App\Models\Supplier;
 use App\Models\BarangMasuk;
 use App\Models\BarangKeluar;
-use App\Models\User; // Tambahkan ini untuk model User
+use App\Models\User; 
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -19,7 +19,7 @@ class DashboardController extends Controller
         $supplier = Supplier::count();
         $barang_masuk = BarangMasuk::count();
         $barang_keluar = BarangKeluar::count();
-        $user_count = User::count(); // Menghitung total pengguna
+        $user_count = User::count(); 
 
         return view('admin.dashboard', compact('kategori', 'produk', 'supplier', 'barang_masuk', 'barang_keluar', 'user_count'));
     }

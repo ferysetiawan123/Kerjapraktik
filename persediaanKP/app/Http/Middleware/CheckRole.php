@@ -17,17 +17,17 @@ class CheckRole
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
         if (!Auth::check()) {
-            return redirect('/login'); // Redirect ke halaman login jika belum login
+            return redirect('/login'); 
         }
 
         $user = Auth::user();
 
-        // Jika user memiliki peran yang diizinkan, lanjutkan request
+       
         if (in_array($user->role, $roles)) {
             return $next($request);
         }
 
-        // Jika tidak memiliki peran yang diizinkan, tampilkan error 403
+
         abort(403, 'Anda tidak memiliki akses ke halaman ini.');
     }
 }

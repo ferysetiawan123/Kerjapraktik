@@ -20,11 +20,10 @@ class BuatProdukTable extends Migration
             $table->string('merk')->nullable();
             $table->integer('harga_beli');
             $table->integer('harga_jual');
-            $table->integer('stok')->default(0); // Kolom stok sudah ada dan tipenya integer. BAGUS.
+            $table->integer('stok')->default(0); 
             $table->timestamps();
 
-            // Tambahkan foreign key constraint jika belum ada (opsional, tapi disarankan)
-            // $table->foreign('id_kategori')->references('id_kategori')->on('kategori')->onDelete('restrict');
+
         });
     }
 

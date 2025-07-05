@@ -57,15 +57,15 @@
     let table;
 
     $(function () {
-        table = $('#laporan-barang-keluar-table').DataTable({ // PERBAIKAN: Gunakan ID tabel
+        table = $('#laporan-barang-keluar-table').DataTable({ 
             responsive: true,
             processing: true,
             serverSide: true,
             autoWidth: false,
             ajax: {
-                // PERBAIKAN: Tambahkan id_produk ke URL AJAX DataTables
+            
                 url: '{{ route('laporankeluar.data', ['awal' => $tanggalAwal, 'akhir' => $tanggalAkhir, 'id_produk' => $idProduk]) }}',
-                // PERBAIKAN: Tambahkan error handling
+               
                 error: function (xhr, error, thrown) {
                     console.log("DataTables Ajax Error:", thrown);
                     console.log("Response Text:", xhr.responseText);
@@ -80,23 +80,23 @@
             columns: [
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
                 {data: 'nama_produk'},
-                {data: 'tanggal_keluar'}, // PERBAIKAN: Gunakan 'tanggal_keluar' sesuai key dari Controller
-                {data: 'jumlah_keluar'},  // PERBAIKAN: Gunakan 'jumlah_keluar' sesuai key dari Controller
-                {data: 'keterangan_barang'}, // PERBAIKAN: Gunakan 'keterangan_barang' sesuai key dari Controller
+                {data: 'tanggal_keluar'}, 
+                {data: 'jumlah_keluar'},  
+                {data: 'keterangan_barang'}, /
             ],
             dom: 'Brt', 
             bSort: false, 
             bPaginate: false, 
         });
 
-        // PERBAIKAN: Event handler saat form modal di-submit
+      
         $('#modal-form form').submit(function (e) {
-            e.preventDefault(); // Mencegah submit form secara default
+            e.preventDefault(); 
             
             // Dapatkan nilai dari form modal
             let tanggalAwalBaru = $('[name=tanggal_awal]').val();
             let tanggalAkhirBaru = $('[name=tanggal_akhir]').val();
-            let idProdukBaru = $('[name=id_produk]').val(); // Ambil nilai produk yang dipilih
+            let idProdukBaru = $('[name=id_produk]').val(); 
 
             // Bangun URL AJAX baru dengan parameter filter produk
             let newUrl = '{{ route('laporankeluar.data', ['awal' => '_awal_', 'akhir' => '_akhir_', 'id_produk' => '_id_produk_']) }}';
@@ -122,7 +122,7 @@
                 $('.box-header:nth-of-type(3) b').html(`Sampai Tanggal   :   ${data}`);
             });
 
-            $('#modal-form').modal('hide'); // Tutup modal
+            $('#modal-form').modal('hide'); 
         });
     });
 

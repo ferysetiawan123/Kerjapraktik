@@ -11,7 +11,7 @@ class Produk extends Model
 
     protected $table = 'produk';
 
-    // Mendefinisikan primary key dari tabel.
+
     protected $primaryKey = 'id_produk';
 
     protected $fillable = [
@@ -22,7 +22,7 @@ class Produk extends Model
         'harga_jual',
         'stok',
         'satuan',
-        'kode_produk', // Pastikan kode_produk ada di sini
+        'kode_produk', 
     ];
 
 

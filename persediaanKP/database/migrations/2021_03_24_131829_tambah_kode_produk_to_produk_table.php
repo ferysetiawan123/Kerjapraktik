@@ -14,8 +14,7 @@ class TambahKodeProdukToProdukTable extends Migration
     public function up()
     {
         Schema::table('produk', function (Blueprint $table) {
-            // Kita biarkan ini tetap not nullable dan unique.
-            // Pengisian nilai akan ditangani di controller.
+
             $table->string('kode_produk')
                   ->unique()
                   ->after('id_kategori');

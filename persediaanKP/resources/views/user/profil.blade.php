@@ -81,9 +81,7 @@
                 })
                 .done(response => {
                     $('[name=name]').val(response.name);
-                    // Jika Anda memiliki foto profil yang diubah, tambahkan ini
-                    // $('.tampil-foto').html(`<img src="{{ url('/') }}${response.foto}" width="200">`);
-                    // $('.img-profil').attr('src', `{{ url('/') }}/${response.foto}`);
+                  
 
                     $('.alert').fadeIn();
                     setTimeout(() => {

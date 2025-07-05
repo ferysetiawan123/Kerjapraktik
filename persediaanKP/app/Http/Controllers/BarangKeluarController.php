@@ -19,8 +19,7 @@ class BarangKeluarController extends Controller
      */
     public function index()
     {
-        // Mengambil produk dengan id_produk sebagai value dan kode_produk sebagai teks
-        // Pastikan 'id_produk' dan 'kode_produk' adalah kolom yang benar di tabel 'produk'
+        
         $produk = Produk::orderBy('kode_produk')
             ->get()
             ->mapWithKeys(function ($item) {
@@ -42,7 +41,7 @@ class BarangKeluarController extends Controller
                 'barang_keluar.id_barang_keluar',
                 'barang_keluar.tanggal_keluar',
                 'barang_keluar.jumlah_keluar',
-                'barang_keluar.penerima_barang', // Pastikan kolom ini ada di database dan dipilih
+                'barang_keluar.penerima_barang',
                 'barang_keluar.keterangan_barang',
                 'produk.kode_produk'
             )
@@ -53,20 +52,15 @@ class BarangKeluarController extends Controller
             ->of($barang_keluar)
             ->addIndexColumn()
             ->addColumn('tanggal_keluar', function ($barang_keluar) {
-                // Pastikan fungsi helper tanggal_indonesia tersedia dan berfungsi
-                // Jika tidak, bisa gunakan Carbon untuk format tanggal:
-                // return \Carbon\Carbon::parse($barang_keluar->tanggal_keluar)->format('d F Y');
                 return tanggal_indonesia($barang_keluar->tanggal_keluar, false);
             })
             ->addColumn('aksi', function ($barang_keluar) {
-                // Pastikan id_barang_keluar tidak kosong sebelum membuat tombol aksi
                 if (empty($barang_keluar->id_barang_keluar)) {
                     Log::warning('ID Barang Keluar kosong untuk satu baris data saat membuat kolom aksi.');
                     return '';
                 }
 
-                // Hanya tampilkan tombol edit/hapus jika user adalah administrator atau manager
-                // Asumsi: Anda memiliki Spatie/Laravel-permission atau implementasi role sejenis
+        
                 if (auth()->check() && (auth()->user()->hasRole('administrator') || auth()->user()->hasRole('manager'))) {
                     return '
                         <div class="btn-group">
@@ -77,7 +71,7 @@ class BarangKeluarController extends Controller
                 }
                 return '';
             })
-            ->rawColumns(['aksi', 'tanggal_keluar']) // 'tanggal_keluar' di sini adalah nama kolom DataTables, bukan kolom database
+            ->rawColumns(['aksi', 'tanggal_keluar']) 
             ->make(true);
     }
 
@@ -166,12 +160,12 @@ class BarangKeluarController extends Controller
         if (!$barang_keluar) {
             return response()->json(['success' => false, 'message' => 'Data barang keluar tidak ditemukan.'], 404);
         }
-        // Pastikan mengembalikan data dengan nama kolom yang sesuai dengan yang diharapkan di frontend
+
         return response()->json([
             'id_produk' => $barang_keluar->id_produk,
             'tanggal_keluar' => $barang_keluar->tanggal_keluar,
             'jumlah_keluar' => $barang_keluar->jumlah_keluar,
-            'penerima_barang' => $barang_keluar->penerima_barang, // Pastikan ini juga dikembalikan
+            'penerima_barang' => $barang_keluar->penerima_barang, 
             'keterangan_barang' => $barang_keluar->keterangan_barang,
         ]);
     }
@@ -190,7 +184,7 @@ class BarangKeluarController extends Controller
             'id_produk' => 'required|exists:produk,id_produk',
             'tanggal_keluar' => 'required|date|before_or_equal:today',
             'jumlah_keluar' => 'required|integer|min:1',
-            'penerima_barang' => 'required|string|max:255', // Validasi untuk penerima_barang
+            'penerima_barang' => 'required|string|max:255', 
             'keterangan_barang' => 'nullable|string|max:255',
         ]);
 
@@ -220,7 +214,7 @@ class BarangKeluarController extends Controller
                 return response()->json(['success' => false, 'message' => 'Produk terkait tidak ditemukan.'], 404);
             }
 
-            // Logika update stok
+            //  update stok
             if ($barang_keluar->id_produk != $request->id_produk) {
                 // Jika produk berubah, kembalikan stok produk lama
                 $produkLama->increment('stok', $barang_keluar->jumlah_keluar);
@@ -250,7 +244,7 @@ class BarangKeluarController extends Controller
                 'id_produk' => $request->id_produk,
                 'tanggal_keluar' => $request->tanggal_keluar,
                 'jumlah_keluar' => $request->jumlah_keluar,
-                'penerima_barang' => $request->penerima_barang, // Pastikan ini juga diupdate
+                'penerima_barang' => $request->penerima_barang, 
                 'keterangan_barang' => $request->keterangan_barang,
             ]);
 
@@ -285,7 +279,7 @@ class BarangKeluarController extends Controller
                 // Mengembalikan stok produk saat barang keluar dihapus
                 $produk->increment('stok', $barang_keluar->jumlah_keluar);
             } else {
-                // Opsional: Log jika produk tidak ditemukan, tapi tetap lanjutkan penghapusan transaksi
+                
                 Log::warning('Produk dengan ID ' . $barang_keluar->id_produk . ' tidak ditemukan saat mencoba mengembalikan stok untuk barang keluar ID ' . $id);
             }
 

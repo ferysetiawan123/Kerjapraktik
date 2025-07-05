@@ -42,10 +42,10 @@ class ProdukController extends Controller
                 return $produk->stok;
             })
             ->addColumn('aksi', function ($produk) {
-                // PERBAIKAN: Tambahkan validasi untuk memastikan id_produk tidak kosong
+             
                 if (empty($produk->id_produk)) {
                     Log::warning('ID Produk kosong untuk satu baris data saat membuat kolom aksi.');
-                    return ''; // Jangan tampilkan tombol jika ID kosong
+                    return '';
                 }
 
                 return '
@@ -64,7 +64,7 @@ class ProdukController extends Controller
      */
     public function create()
     {
-        // Biasanya tidak digunakan jika form ada di modal index
+       
     }
 
     /**
@@ -72,7 +72,7 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
-        // Menggunakan Validator::make untuk konsistensi dan kontrol error yang lebih baik
+        
         $validator = Validator::make($request->all(), [
             'nama_produk' => 'required|string|max:255',
             'id_kategori' => 'required|exists:kategori,id_kategori',
@@ -94,7 +94,7 @@ class ProdukController extends Controller
         try {
             $data = $request->all();
 
-            // LOGIKA PENTING: GENERATE KODE PRODUK SECARA OTOMATIS
+        
             $today = now()->format('Ymd');
 
             $lastProduk = Produk::where('kode_produk', 'like', "PROD-{$today}-%")
@@ -111,7 +111,7 @@ class ProdukController extends Controller
             $formattedNextCode = str_pad($nextCode, 4, '0', STR_PAD_LEFT);
             $data['kode_produk'] = "PROD-{$today}-{$formattedNextCode}";
 
-            // Memastikan kode_produk yang digenerate unik
+
             while (Produk::where('kode_produk', $data['kode_produk'])->exists()) {
                 $nextCode++;
                 $formattedNextCode = str_pad($nextCode, 4, '0', STR_PAD_LEFT);
@@ -147,9 +147,7 @@ class ProdukController extends Controller
      */
     public function edit(string $id)
     {
-        // Fungsi ini tidak umum digunakan jika 'show' sudah mengembalikan data yang cukup untuk form edit.
-        // Jika Anda memanggil route('produk.edit', $id) dari frontend, maka fungsi ini akan terpanggil.
-        // Umumnya, jika form edit adalah modal, kita panggil route 'show' dan mengisi modal dengan JS.
+
         $produk = Produk::find($id);
 
         if (!$produk) {
@@ -177,7 +175,7 @@ class ProdukController extends Controller
             'harga_beli' => 'required|numeric|min:0',
             'harga_jual' => 'required|numeric|min:0|gte:harga_beli',
             'satuan' => 'required|string|max:50',
-            // 'kode_produk' tidak divalidasi dari request karena tidak ada di form dan digenerate otomatis
+
         ]);
 
         if ($validator->fails()) {
@@ -192,8 +190,7 @@ class ProdukController extends Controller
         try {
             $data = $request->all();
 
-            // Penting: Jangan generate kode_produk baru saat update,
-            // dan pastikan tidak ada kode_produk di request yang akan menimpa yang sudah ada.
+
             unset($data['kode_produk']);
 
             $produk->update($data);

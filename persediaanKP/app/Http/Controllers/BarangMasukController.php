@@ -8,7 +8,7 @@ use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator; // Penting: Pastikan ini ada
+use Illuminate\Support\Facades\Validator; 
 
 class BarangMasukController extends Controller
 {
@@ -55,18 +55,17 @@ class BarangMasukController extends Controller
             ->of($barang_masuk)
             ->addIndexColumn()
             ->addColumn('tanggal_masuk', function ($barang_masuk) {
-                // Pastikan fungsi helper tanggal_indonesia tersedia di project Anda
-                // Jika belum ada, Anda bisa menambahkannya di app/Helpers/helpers.php atau sejenisnya
+
                 return tanggal_indonesia($barang_masuk->tanggal_masuk, false);
             })
             ->addColumn('aksi', function ($barang_masuk) {
-                // Pastikan id_barang_masuk tidak kosong sebelum membuat tombol aksi
+                
                 if (empty($barang_masuk->id_barang_masuk)) {
                     Log::warning('ID Barang Masuk kosong untuk satu baris data saat membuat kolom aksi.');
-                    return ''; // Mengembalikan string kosong jika ID tidak valid
+                    return ''; 
                 }
 
-                // Hanya tampilkan tombol edit/hapus jika user adalah administrator atau manager
+
                 if (auth()->check() && (auth()->user()->hasRole('administrator') || auth()->user()->hasRole('manager'))) {
                     return '
                         <div class="btn-group">
@@ -75,7 +74,7 @@ class BarangMasukController extends Controller
                         </div>
                     ';
                 }
-                return ''; // Mengembalikan string kosong jika user tidak memiliki role yang diizinkan
+                return ''; 
             })
             ->rawColumns(['aksi', 'tanggal_masuk'])
             ->make(true);
@@ -124,7 +123,7 @@ class BarangMasukController extends Controller
             $barang_masuk = BarangMasuk::create([
                 'id_produk' => $request->id_produk,
                 'id_supplier' => $request->id_supplier,
-                'tanggal_masuk' => $request->tanggal_masuk, // Menggunakan $request->tanggal_masuk
+                'tanggal_masuk' => $request->tanggal_masuk, 
                 'jumlah_masuk' => $request->jumlah_masuk,
                 'penerima_barang' => $request->penerima_barang,
             ]);
@@ -160,10 +159,10 @@ class BarangMasukController extends Controller
         if (!$barang_masuk) {
             return response()->json(['success' => false, 'message' => 'Data barang masuk tidak ditemukan.'], 404);
         }
-        // Pastikan mengembalikan data dengan nama kolom snake_case
+        
         return response()->json([
             'id_produk' => $barang_masuk->id_produk,
-            'tanggal_masuk' => $barang_masuk->tanggal_masuk, // Menggunakan 'tanggal_masuk'
+            'tanggal_masuk' => $barang_masuk->tanggal_masuk, 
             'jumlah_masuk' => $barang_masuk->jumlah_masuk,
             'id_supplier' => $barang_masuk->id_supplier,
             'penerima_barang' => $barang_masuk->penerima_barang,
@@ -216,11 +215,11 @@ class BarangMasukController extends Controller
 
             // Logika update stok
             if ($barang_masuk->id_produk != $request->id_produk) {
-                // Jika produk berubah, kembalikan stok produk lama dan tambahkan ke produk baru
+
                 $produkLama->decrement('stok', $barang_masuk->jumlah_masuk);
                 $produkBaru->increment('stok', $request->jumlah_masuk);
             } else {
-                // Jika produk tidak berubah, hitung selisih jumlah dan sesuaikan stok produk yang sama
+
                 $selisihJumlah = $request->jumlah_masuk - $barang_masuk->jumlah_masuk;
                 $produkBaru->stok += $selisihJumlah;
 
@@ -231,11 +230,11 @@ class BarangMasukController extends Controller
                 $produkBaru->save();
             }
 
-            // Perbarui data barang masuk dengan nama kolom snake_case
+
             $barang_masuk->update([
                 'id_produk' => $request->id_produk,
                 'id_supplier' => $request->id_supplier,
-                'tanggal_masuk' => $request->tanggal_masuk, // Menggunakan $request->tanggal_masuk
+                'tanggal_masuk' => $request->tanggal_masuk, 
                 'jumlah_masuk' => $request->jumlah_masuk,
                 'penerima_barang' => $request->penerima_barang,
             ]);
@@ -268,10 +267,7 @@ class BarangMasukController extends Controller
 
             $produk = Produk::find($barang_masuk->id_produk);
             if ($produk) {
-                // Jika dihapus, stok harus dikurangi dari produk
-                // Tidak perlu cek stok negatif di sini karena ini adalah rollback transaksi.
-                // Logika ini mengasumsikan stok produk tidak akan negatif saat proses aslinya.
-                // Jika ingin lebih ketat, bisa ditambahkan validasi.
+
                 $produk->decrement('stok', $barang_masuk->jumlah_masuk);
             }
 

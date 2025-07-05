@@ -67,29 +67,28 @@
             format: 'yyyy-mm-dd',
             autoclose: true,
             todayHighlight: true,
-            endDate: '0d' // Memastikan tidak bisa memilih tanggal di masa depan
+            endDate: '0d' 
         });
 
         // Inisialisasi Select2 untuk dropdown produk di modal laporan keluar
         if ($.fn.select2) { 
-            $('#modal-form .select2').select2({ // Gunakan kelas .select2
+            $('#modal-form .select2').select2({ 
                 placeholder: 'Pilih Produk',
                 allowClear: true,
-                dropdownParent: $('#modal-form') // Penting untuk Select2 di dalam modal
+                dropdownParent: $('#modal-form') 
             });
         }
 
         // Event listener saat modal ditunjukkan
         $('#modal-form').on('shown.bs.modal', function () {
-            // Re-initialize datepicker to ensure it works correctly if elements are dynamically added/reset.
-            // Using destroy() before re-initialization helps prevent duplicate event listeners.
+        
             $('#modal-form .datepicker').datepicker('destroy').datepicker({ 
                 format: 'yyyy-mm-dd',
                 autoclose: true,
                 todayHighlight: true,
                 endDate: '0d'
             });
-            // Pastikan fokus ke input tanggal_awal saat modal terbuka
+          
             $('#modal-form [name=tanggal_awal]').focus();
 
             // Re-initialize Select2 saat modal ditampilkan

@@ -57,7 +57,7 @@
     let table;
 
     $(function () {
-        table = $('#laporan-barang-masuk-table').DataTable({ // Gunakan ID tabel
+        table = $('#laporan-barang-masuk-table').DataTable({ 
             responsive: true,
             processing: true,
             serverSide: true,
@@ -84,7 +84,7 @@
                 {data: 'nama_produk'},
                 {data: 'tanggal'},
                 {data: 'jumlahMasuk'},
-                {data: 'nama_supplier'}, // Perbaiki key menjadi 'nama_supplier'
+                {data: 'nama_supplier'}, 
             ],
             dom: 'Brt',
             bSort: false,
@@ -93,12 +93,12 @@
 
         // Event handler saat form modal di-submit
         $('#modal-form form').submit(function (e) {
-            e.preventDefault(); // Mencegah submit form secara default
+            e.preventDefault(); 
 
             // Dapatkan nilai dari form modal
             let tanggalAwalBaru = $('[name=tanggal_awal]').val();
             let tanggalAkhirBaru = $('[name=tanggal_akhir]').val();
-            let idProdukBaru = $('[name=id_produk]').val(); // Ambil nilai produk yang dipilih
+            let idProdukBaru = $('[name=id_produk]').val(); 
 
             // Bangun URL AJAX baru dengan parameter filter produk
             let newUrl = '{{ route('laporan.data', ['awal' => '_awal_', 'akhir' => '_akhir_', 'id_produk' => '_id_produk_']) }}';
@@ -114,7 +114,7 @@
             newPdfUrl = newPdfUrl.replace('_awal_', tanggalAwalBaru);
             newPdfUrl = newPdfUrl.replace('_akhir_', tanggalAkhirBaru);
             newPdfUrl = newPdfUrl.replace('_id_produk_', idProdukBaru);
-            $('.btn-danger').attr('href', newPdfUrl); // Mengganti btn-primary menjadi btn-danger sesuai kode Anda
+            $('.btn-danger').attr('href', newPdfUrl); 
 
             // Perbarui teks tanggal di header
             $.get(`{{ url('/tanggal_indonesia') }}/${tanggalAwalBaru}/false`, function(data) {
@@ -124,7 +124,7 @@
                 $('.box-header:nth-of-type(3) b').html(`Sampai Tanggal   :   ${data}`);
             });
 
-            $('#modal-form').modal('hide'); // Tutup modal
+            $('#modal-form').modal('hide'); 
         });
     });
 

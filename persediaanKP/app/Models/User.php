@@ -23,8 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // <<< TAMBAHKAN INI
-        'foto', // <<< TAMBAHKAN INI (jika Anda memiliki kolom 'foto' di tabel users)
+        'role', 
+        'foto', 
     ];
 
     /**
@@ -54,7 +54,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $appends = [
-        'profile_photo_url', // Ini dari Jetstream, biarkan saja
+        'profile_photo_url', 
     ];
 
     /**

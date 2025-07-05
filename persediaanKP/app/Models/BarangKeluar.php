@@ -13,13 +13,12 @@ class BarangKeluar extends Model
 
     protected $primaryKey = 'id_barang_keluar';
 
-    // *** PERBAIKAN PENTING DI SINI ***
-    // Pastikan kolom 'penerima_barang' ditambahkan ke $fillable
+
     protected $fillable = [
         'id_produk',
         'tanggal_keluar',
         'jumlah_keluar',
-        'penerima_barang', // <--- INI PENYEBAB UTAMA ERROR ANDA. WAJIB DITAMBAHKAN!
+        'penerima_barang', 
         'keterangan_barang',
     ];
 

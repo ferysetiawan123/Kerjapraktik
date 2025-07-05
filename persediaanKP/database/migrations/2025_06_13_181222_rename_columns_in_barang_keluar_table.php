@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('barang_keluar', function (Blueprint $table) {
-            // Cek apakah kolom 'jumlahKeluar' ada sebelum rename
+            
             if (Schema::hasColumn('barang_keluar', 'jumlahKeluar')) {
                 $table->renameColumn('jumlahKeluar', 'jumlah_keluar');
             }
-            // Perbaikan untuk 'penerima_barang' (jika sebelumnya 'penerima')
+            
             if (Schema::hasColumn('barang_keluar', 'penerima')) {
                 $table->renameColumn('penerima', 'penerima_barang');
             }
-            // Perbaikan untuk 'keterangan_barang' (jika sebelumnya 'keterangan')
+          
             if (Schema::hasColumn('barang_keluar', 'keterangan')) {
                 $table->renameColumn('keterangan', 'keterangan_barang');
             }
@@ -33,7 +33,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('barang_keluar', function (Blueprint $table) {
-            // Kembalikan nama kolom jika migrasi di-rollback
+            
             if (Schema::hasColumn('barang_keluar', 'jumlah_keluar')) {
                 $table->renameColumn('jumlah_keluar', 'jumlahKeluar');
             }

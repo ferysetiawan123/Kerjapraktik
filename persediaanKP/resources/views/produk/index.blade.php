@@ -64,7 +64,7 @@
     let table;
     const produkDataUrl = '{{ route('produk.data') }}';
     // Base URL untuk produk, akan digunakan di JS
-    const produkBaseUrl = '{{ url('/produk') }}'; 
+    const produkBaseUrl = '{{ url('/produk') }}';
 
     $(function () {
         table = $('.table').DataTable({
@@ -101,17 +101,17 @@
             if (!e.isDefaultPrevented()) {
                 e.preventDefault();
 
-               
+
                 const form = $(this).find('form');
                 const formData = new FormData(form[0]);
-                formData.append('_method', form.find('[name=_method]').val()); 
+                formData.append('_method', form.find('[name=_method]').val());
 
                 $.ajax({
                     url: form.attr('action'),
-                    type: form.find('[name=_method]').val() === 'put' ? 'POST' : 'POST', 
+                    type: form.find('[name=_method]').val() === 'put' ? 'POST' : 'POST',
                     data: formData,
-                    processData: false, 
-                    contentType: false, 
+                    processData: false,
+                    contentType: false,
                     success: function(response) {
                         $('#modal-form').modal('hide');
                         table.ajax.reload();
@@ -133,7 +133,7 @@
                                 let readableField = field.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
                                 errorMessage += `- ${readableField}: ${errors[field].join(', ')}\n`;
                             }
-                            
+
                             if (typeof validator !== 'undefined') {
                                 validator.invalidate(errors);
                             }
@@ -173,8 +173,9 @@
         @if (auth()->check() && auth()->user()->hasRole('kasir'))
             $('.btn-group button').hide();
             table.column(-1).visible(false);
-            table.column(0).visible(false); 
+            table.column(0).visible(false);
 
+        @endif
         // Inisialisasi tooltip
         $('[data-toggle="tooltip"]').tooltip();
     });
@@ -192,11 +193,11 @@
         $('.help-block.with-errors').empty();
         $('.form-group').removeClass('has-error');
         $('#modal-form .select2').val('').trigger('change');
-        return false; 
+        return false;
     }
 
     function editForm(url) {
-        console.log("Fetching data from:", url); 
+        console.log("Fetching data from:", url);
         $('#modal-form').modal('show');
         $('#modal-form .modal-title').text('Edit Produk');
 
@@ -212,7 +213,7 @@
         $.get(url)
             .done((response) => {
                 // Perbaikan cara mengatur action URL
-               
+
                 $('#modal-form form').attr('action', produkBaseUrl + '/' + response.id_produk);
 
                 $('#modal-form [name=nama_produk]').val(response.nama_produk);
@@ -273,7 +274,7 @@
                     });
             }
         });
-        return false; 
+        return false;
     }
 
     function deleteSelected(url) {

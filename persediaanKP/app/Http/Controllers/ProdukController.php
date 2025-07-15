@@ -39,10 +39,16 @@ class ProdukController extends Controller
                 return format_uang($produk->harga_jual);
             })
             ->addColumn('stok', function ($produk) {
-                return $produk->stok;
+                if ($produk->stok == 0) {
+                    return '<span class="text-danger"><strong>0</strong> <i class="fa fa-times-circle" title="Stok Habis"></i></span>';
+                } elseif ($produk->stok < 10) {
+                    return '<span class="text-warning"><strong>' . $produk->stok . '</strong> <i class="fa fa-exclamation-triangle" title="Stok Hampir Habis"></i></span>';
+                } else {
+                    return $produk->stok;
+                }
             })
             ->addColumn('aksi', function ($produk) {
-             
+
                 if (empty($produk->id_produk)) {
                     Log::warning('ID Produk kosong untuk satu baris data saat membuat kolom aksi.');
                     return '';
@@ -55,7 +61,7 @@ class ProdukController extends Controller
                 </div>
                 ';
             })
-            ->rawColumns(['aksi', 'kode_produk'])
+            ->rawColumns(['aksi', 'kode_produk','stok'])
             ->make(true);
     }
 
@@ -64,7 +70,7 @@ class ProdukController extends Controller
      */
     public function create()
     {
-       
+
     }
 
     /**
@@ -72,7 +78,7 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $validator = Validator::make($request->all(), [
             'nama_produk' => 'required|string|max:255',
             'id_kategori' => 'required|exists:kategori,id_kategori',
@@ -94,7 +100,7 @@ class ProdukController extends Controller
         try {
             $data = $request->all();
 
-        
+
             $today = now()->format('Ymd');
 
             $lastProduk = Produk::where('kode_produk', 'like', "PROD-{$today}-%")

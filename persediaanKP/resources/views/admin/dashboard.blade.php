@@ -10,6 +10,21 @@
 @endsection
 
 @section('content')
+<style>
+    .badge-stok-rendah {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #d9534f;
+        color: #fff;
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 12px;
+        z-index: 10;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+</style>
+
 <div class="row">
 
     {{-- Kategori Box (Hanya untuk Administrator dan Manajer) --}}
@@ -30,7 +45,14 @@
 
     {{-- Produk Box (Untuk Semua Peran: Administrator, Manajer, Kasir) --}}
     <div class="col-lg-3 col-xs-6">
-        <div class="small-box" style="background-color: #A6D6D6 !important;">
+        <div class="small-box" style="background-color: #A6D6D6 !important; position: relative;">
+            {{-- Badge melayang --}}
+            @if ($jumlah_stok_rendah > 0)
+                <span class="badge-stok-rendah">
+                    <i class="fa fa-warning"></i> {{ $jumlah_stok_rendah }} stok rendah
+                </span>
+            @endif
+
             <div class="inner" style="color: #FFFFFF;">
                 <h3>{{ $produk }}</h3>
                 <p>Total Produk</p>
@@ -38,9 +60,13 @@
             <div class="icon" style="color: rgba(255,255,255,0.2);">
                 <i class="fa fa-cubes"></i>
             </div>
-            <a href="{{ route('produk.index') }}" class="small-box-footer" style="color: #FFFFFF;">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('produk.index') }}" class="small-box-footer" style="color: #FFFFFF;">
+                Lihat <i class="fa fa-arrow-circle-right"></i>
+            </a>
         </div>
     </div>
+
+
 
     {{-- Supplier Box (Hanya untuk Administrator dan Manajer) --}}
     @if (auth()->check() && (auth()->user()->hasRole('administrator') || auth()->user()->hasRole('manager')))

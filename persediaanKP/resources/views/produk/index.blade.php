@@ -19,6 +19,7 @@
                     @if (auth()->check() && (auth()->user()->hasRole('administrator') || auth()->user()->hasRole('manager')))
                     <button onclick="addForm('{{ route('produk.store') }}')" class="btn btn-success btn-s btn-flat"><i class="fa fa-plus-circle"></i> Tambah Produk</button>
                     <button onclick="deleteSelected('{{ route('produk.delete_selected') }}')" class="btn btn-danger btn-s btn-flat"><i class="fa fa-trash"></i> Hapus Terpilih</button>
+                    <button onclick="filterStokRendah()" class="btn btn-warning btn-s btn-flat"><i class="fa fa-filter"></i> Stok < 10</button>
                     @endif
                     {{-- Tambahkan info untuk menambah stok melalui Barang Masuk --}}
                     <button type="button" class="btn btn-warning btn-s btn-flat" data-toggle="tooltip" data-placement="top" title="Untuk menambah stok produk yang sudah ada, gunakan menu 'Barang Masuk'."><i class="fa fa-info-circle"></i> Info Stok</button>
@@ -326,6 +327,11 @@
                 confirmButtonText: 'OK'
             });
         }
+    }
+</script>
+<script>
+    function filterStokRendah() {
+        table.column(8).search("Stok Habis|Stok Hampir Habis", true, false).draw();
     }
 </script>
 @endpush

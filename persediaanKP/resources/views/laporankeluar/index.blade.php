@@ -100,7 +100,7 @@
             let idProdukBaru = $('[name=id_produk]').val();
 
             // Bangun URL AJAX baru dengan parameter filter produk
-            let newUrl = '{{ route('laporankeluar.data', ['awal' => '_awal_', 'akhir' => '_akhir_', 'id_produk' => '_id_produk_']) }}';
+            let newUrl = '{{ route('laporankeluar.data', ['awal' => '_awal_', 'akhir' => '_akhir_']) }}' + '?id_produk=' + idProdukBaru;
             newUrl = newUrl.replace('_awal_', tanggalAwalBaru);
             newUrl = newUrl.replace('_akhir_', tanggalAkhirBaru);
             newUrl = newUrl.replace('_id_produk_', idProdukBaru);

@@ -17,11 +17,11 @@ class UserTableSeeder extends Seeder
     {
 
 
-        // Akun Administrator
+        // Akun Kepala Gudang
         User::updateOrCreate(
             ['email' => 'admin@gmail.com'], 
             [
-                'name' => 'Administrator',
+                'name' => 'Kepalagudang',
                 'password' => Hash::make('123'),  
                 'role' => 'administrator', 
                 'email_verified_at' => now(), 
@@ -32,7 +32,7 @@ class UserTableSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'manager@gmail.com'],
             [
-                'name' => 'Manajer',
+                'name' => 'Staffgudang',
                 'password' => Hash::make('123'),
                 'role' => 'manager', // Role Manajer
                 'email_verified_at' => now(),
